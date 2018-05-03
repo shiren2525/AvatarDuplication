@@ -12,4 +12,12 @@ public class PlayerBase : MonoBehaviour {
 
     // 移動速度
     private float speed;
+
+    public void Move()
+    {
+        if (Input.GetKeyDown(keyLeft))
+        {
+            speed++;
+        }
+    }
 }
