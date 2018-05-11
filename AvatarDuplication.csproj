@@ -282,7 +282,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\PlayerBase.cs" />
+    <Compile Include="Assets\Scripts\Enemy\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyBase.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyLock.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyParasol.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemySpring.cs" />
+    <Compile Include="Assets\Scripts\Player\Attack.cs" />
+    <Compile Include="Assets\Scripts\Player\Player.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerAvatar.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerBase.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerStatus.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
