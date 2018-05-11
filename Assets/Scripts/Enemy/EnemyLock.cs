@@ -15,24 +15,23 @@ public class EnemyLock : EnemyBase {
 
     private void Awake()
     {
-        EnemySetUp();
+        SetUp();
     }
 
     private void FixedUpdate()
     {
         Move();
-
-        Debug.DrawRay(transform.position, Vector3.left * lockRange);
         FindAvatar();
+        Debug.DrawRay(transform.position, Vector3.left * lockRange);
     }
 
     private void FindAvatar()
     {
         if (!stateLock)
         {
-            // 前にプレイヤー又はアバターがあった場合、起動させられる。
             if (Physics2D.Raycast(transform.position, Vector2.left, lockRange, layerMask))
             {
+                // 前にプレイヤーかアバターがあった場合に速度を変更する
                 speedSelect = 5;
                 SpeedSelector();
             }
@@ -41,6 +40,7 @@ public class EnemyLock : EnemyBase {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // プレイヤーかアバターに接触した場合に、ロック状態になって停止する
         if (collision.gameObject.tag == "Player")
         {
             speedSelect = 1;

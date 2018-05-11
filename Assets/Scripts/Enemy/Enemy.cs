@@ -6,7 +6,7 @@ public class Enemy : EnemyBase {
 
     private void Awake()
     {
-        EnemySetUp();
+        SetUp();
     }
 
     private void FixedUpdate()
@@ -21,6 +21,14 @@ public class Enemy : EnemyBase {
             DamageEnemy(); 
         }
         if (collision.gameObject.tag == "Avatar")
+        {
+            DamageEnemy();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Sowrd")
         {
             DamageEnemy();
         }

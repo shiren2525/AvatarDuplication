@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// プレイヤーのサブクラス
 public class Player : PlayerBase {
 
     // ステータス管理に使用
@@ -9,20 +10,18 @@ public class Player : PlayerBase {
 
     // EnemyLockにロックされているか管理
     private bool stateLock;
-
-    //public Animator Anim;
-
+    
     private void Awake()
     {
+        SetUp();
         rig2D = GetComponent<Rigidbody2D>();
         HP = 3;
-        //Anim = GetComponent<Animator>();
     }
 
     private void FixedUpdate ()
     {
 
-        Debug.DrawRay(transform.position, Vector3.right * 2.0f);
+        //Debug.DrawRay(transform.position, Vector3.right * findRange);
         if (!stateLock)
         {
             Move();
@@ -33,7 +32,7 @@ public class Player : PlayerBase {
             Attack();
         }
     }   
-
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // 敵と接触した場合にダメージ
@@ -48,6 +47,7 @@ public class Player : PlayerBase {
         }
         if (collision.gameObject.tag == "EnemyLock")
         {
+            // EnemyLockと接触したらロックされる
             stateLock = !stateLock;
         }
     }
@@ -55,6 +55,7 @@ public class Player : PlayerBase {
     {
         if (collision.gameObject.tag == "EnemyLock")
         {
+            // EnemyLockが倒れたら解除される
             stateLock = !stateLock;
         }    
     }

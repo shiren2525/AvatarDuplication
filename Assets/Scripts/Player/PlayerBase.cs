@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// プレイヤーのスーパークラス
 public class PlayerBase : MonoBehaviour {
 
     // 操作ボタン
@@ -31,29 +32,60 @@ public class PlayerBase : MonoBehaviour {
     // 前にオフ状態のアバターがあるかどうかを判別するために使用
     public LayerMask layerMaskSowrd;
 
-    // アバターを発見できるようになる距離
-    public float findRange;
+    // アバターを発見できるようになる距離(この距離にある時にアタックもできなくなる)
+    protected float findRange = 0.1f;
 
-    private void Start()
+    // 攻撃を出す距離
+    public float attackRange;
+
+    // FlipZoneで使用
+    private bool flipMove;
+
+    // プレイヤーとアバターのAwakeで呼び出す
+    protected void SetUp()
     {
         groundDistance = GetComponent<SpriteRenderer>().bounds.size.y / 2.0f;
         playerWidth = GetComponent<SpriteRenderer>().bounds.size.x;
     }
 
+    /// <summary>
+    /// 移動処理
+    /// </summary>
     protected void Move()
     {
-        // 移動処理
         Vector3 nextPosition = transform.position;
+        Vector3 scale = transform.localScale;
 
         if (Input.GetKey(keyLeft))
         {
-            nextPosition.x -= Time.deltaTime * moveSpeed;
+            if (!flipMove)
+            {
+                scale.x = -0.3f;
+                nextPosition.x -= Time.deltaTime * moveSpeed;
+            }
+            else
+            {
+                scale.x = 0.3f;
+                nextPosition.x += Time.deltaTime * moveSpeed;
+
+            }
         }
         else if (Input.GetKey(keyRight))
         {
-            nextPosition.x += Time.deltaTime * moveSpeed;
+            if (!flipMove)
+            {
+                scale.x = 0.3f;
+                nextPosition.x += Time.deltaTime * moveSpeed;
+
+            }
+            else
+            {
+                scale.x = -0.3f;
+                nextPosition.x -= Time.deltaTime * moveSpeed;
+            }
         }
         transform.position = nextPosition;
+        transform.localScale = scale;
     }
 
     protected void Jump()
@@ -98,7 +130,12 @@ public class PlayerBase : MonoBehaviour {
         }
         else if (Input.GetKeyDown(keyAction))
         {
-            Instantiate(AttckJudge, new Vector3(pos.x + 1, pos.y), Quaternion.identity);
+            Instantiate(AttckJudge, new Vector3(pos.x + attackRange, pos.y), Quaternion.identity);
         }
+    }
+
+    public void FlipMove()
+    {
+        flipMove = !flipMove;
     }
 }

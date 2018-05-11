@@ -11,10 +11,10 @@ public class EnemySpring : EnemyBase {
     private void Awake()
     {
         rig2D = GetComponent<Rigidbody2D>();
-        EnemySetUp();
+        SetUp();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
        Move();
     }
@@ -31,6 +31,14 @@ public class EnemySpring : EnemyBase {
             DamageEnemy();
         }
         if (collision.gameObject.tag == "Avatar")
+        {
+            DamageEnemy();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Sowrd")
         {
             DamageEnemy();
         }

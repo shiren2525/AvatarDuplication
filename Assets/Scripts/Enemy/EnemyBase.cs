@@ -27,10 +27,10 @@ public class EnemyBase : MonoBehaviour {
 
     // エネミーのHPを管理
     protected int HPEnemey;
-
-    protected void EnemySetUp()
+    
+    // 各EnemyのAwakeで呼び出して、HPとスピードを設定するメソッド
+    protected void SetUp()
     {
-        // 各EnemyのAwakeで呼び出して、HPとスピードを設定
         HPSelector();
         SpeedSelector();
     }
@@ -43,7 +43,7 @@ public class EnemyBase : MonoBehaviour {
 
     protected void SpeedSelector()
     {
-        // インセンティブで選んだスピードを代入
+        // インスペクターで選んだスピードを代入
         switch (speedSelect)
         {
             case 1:
@@ -84,9 +84,15 @@ public class EnemyBase : MonoBehaviour {
     protected void DamageEnemy()
     {
         HPEnemey--;
-        if (HPEnemey <= 0)
+        if (IsDeath())
         {
             Destroy(this.gameObject);
         }
     }
+
+    private bool IsDeath()
+    {
+        return HPEnemey <= 0;
+    }
+
 }

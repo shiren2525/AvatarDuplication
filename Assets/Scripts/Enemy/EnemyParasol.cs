@@ -13,15 +13,15 @@ public class EnemyParasol : EnemyBase {
     // Walkerに切り替えるために必要
     public Sprite EnemyWakerSprite;
 
-    // パラソルの動きを制御するために必要
-    private int parasolMode = 0;
+    // パラソルの揺れを制御するために必要
+    private bool swayCourse;
 
     // パラソルの左右移動を切り替える角度を設定
     public float parasolAngle;
 
     private void Awake()
     {
-        EnemySetUp();
+        SetUp();
     }
 
     private void FixedUpdate()
@@ -58,34 +58,36 @@ public class EnemyParasol : EnemyBase {
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Sowrd")
+        {
+            DamageEnemy();
+        }
+    }
+
+    // パラソルの挙動を制御するメソッド
     private void ParasolMove()
     {
-        switch (parasolMode)
+        if (swayCourse)
         {
-            case 0:
-                GetComponent<Rigidbody2D>().velocity = transform.right.normalized * swaySpeed;
-                transform.Rotate(new Vector3(0, 0, 45) * Time.deltaTime);
-                break;
-            case 1:
-                GetComponent<Rigidbody2D>().velocity = transform.right.normalized * -swaySpeed;
-                transform.Rotate(new Vector3(0, 0, -45) * Time.deltaTime);
-                break;
-            case 2:
-                GetComponent<Rigidbody2D>().velocity = transform.right.normalized * swaySpeed;
-                transform.Rotate(new Vector3(0, 0, 45) * Time.deltaTime);
-                break;
-            default:
-                break;
+            GetComponent<Rigidbody2D>().velocity = transform.right.normalized * swaySpeed;
+            transform.Rotate(new Vector3(0, 0, 45) * Time.deltaTime);
+        }
+        else if (!swayCourse)
+        {
+            GetComponent<Rigidbody2D>().velocity = transform.right.normalized * -swaySpeed;
+            transform.Rotate(new Vector3(0, 0, -45) * Time.deltaTime);
         }
 
         if (this.gameObject.transform.localEulerAngles.z >= parasolAngle && this.gameObject.transform.localEulerAngles.z <= parasolAngle + 10.0f)
         {
             // 右方向に60度回転したら、切り替える
-            parasolMode = 1;
+            swayCourse = !swayCourse;
         }
         else if (this.gameObject.transform.localEulerAngles.z >= 350.0f - parasolAngle && this.gameObject.transform.localEulerAngles.z <= 360.0f - parasolAngle)
         {
-            parasolMode = 2;
+            swayCourse = !swayCourse;
         }        
     }
 }

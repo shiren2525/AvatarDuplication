@@ -286,7 +286,12 @@
     <Compile Include="Assets\Scripts\Enemy\EnemyBase.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyLock.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyParasol.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyShild.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemySpring.cs" />
+    <Compile Include="Assets\Scripts\Gimmick\FlipZone.cs" />
+    <Compile Include="Assets\Scripts\Gimmick\MultiSwichManager.cs" />
+    <Compile Include="Assets\Scripts\Gimmick\MultiSwitch.cs" />
+    <Compile Include="Assets\Scripts\Gimmick\Warp.cs" />
     <Compile Include="Assets\Scripts\Player\Attack.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAvatar.cs" />

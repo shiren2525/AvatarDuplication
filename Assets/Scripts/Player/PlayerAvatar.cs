@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// アバターのサブクラス
 public class PlayerAvatar : PlayerBase {
 
     // アバターの状態を管理
@@ -18,24 +19,28 @@ public class PlayerAvatar : PlayerBase {
 
     // EnemyLockにロックされているかどうかを管理
     private bool stateLock;
-
+    
     private void Awake()
     {
+        this.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+        SetUp();
         rig2D = GetComponent<Rigidbody2D>();
         avatarWidth = GetComponent<SpriteRenderer>().bounds.size.x;
 
         HP = 1;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if (stateLock)
-            return;
-
+        // オフ状態の時のみ動かす
         if (!stateAvatar)
         {
-            // 起動している場合のみ動作させる
             FindAvatar();
+        }
+        
+        if (stateLock || !stateAvatar)
+        {
+            // ロックされているか、オフ状態の場合リターン
             return;
         }
 
@@ -45,7 +50,6 @@ public class PlayerAvatar : PlayerBase {
         {
             Jump();
         }
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -67,6 +71,7 @@ public class PlayerAvatar : PlayerBase {
         }
         if (collision.gameObject.tag == "EnemyLock")
         {
+            // EnemyLockと接触したらロックされる
             stateLock = true;
         }
     }
@@ -75,6 +80,7 @@ public class PlayerAvatar : PlayerBase {
     {
         if (collision.gameObject.tag == "EnemyLock")
         {
+            // EnemyLockが倒れたらロックが解除される
             stateLock = false;
         }
     }
@@ -83,11 +89,14 @@ public class PlayerAvatar : PlayerBase {
     {
         Vector3 offset = Vector3.zero;
         offset.x = avatarWidth / 2;
+        Debug.DrawRay(transform.position - offset, Vector2.left * findRange);
         // 前にプレイヤー又はアバターがあった場合、起動させられる。
-        if (Physics2D.Raycast(transform.position - offset, Vector2.left, 0.1f, layerMask))
+        if (Physics2D.Raycast(transform.position - offset, Vector2.left, findRange, layerMask))
         {
             if (Input.GetKeyDown(keyAction))
             {
+                // オフ状態からアバター扱いにする
+                this.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
                 PlayerStatus.GetComponent<PlayerStatus>().AddNumberAvatar();
                 this.gameObject.layer = LayerMask.NameToLayer("Avatar");
                 stateAvatar = true;
