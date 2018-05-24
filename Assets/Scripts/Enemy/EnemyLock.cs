@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// EnemyLockの派生クラス
+/// </summary>
 public class EnemyLock : EnemyBase {
 
     // プレイヤーかアバターを発見できる距離
     public float lockRange;
 
-    // プレイヤーとアバターを識別
+    // プレイヤーとアバターを識別するために必要
     public LayerMask layerMask;
 
     // EnemyLockがプレイヤーに触れて停止させるために必要
-    private bool stateLock=false;
+    private bool stateLock = false;
 
     private void Awake()
     {
@@ -25,22 +28,27 @@ public class EnemyLock : EnemyBase {
         Debug.DrawRay(transform.position, Vector3.left * lockRange);
     }
 
+    /// <summary>
+    /// 前にプレイヤーかアバターがある場合に速度を速くする
+    /// </summary>
     private void FindAvatar()
     {
         if (!stateLock)
         {
             if (Physics2D.Raycast(transform.position, Vector2.left, lockRange, layerMask))
             {
-                // 前にプレイヤーかアバターがあった場合に速度を変更する
                 speedSelect = 5;
                 SpeedSelector();
             }
         }
     }
 
+    /// <summary>
+    /// プレイヤーかアバターに接触した場合に、ロック状態になって停止する
+    /// </summary>
+    /// <param name="collision">相手のコライダー</param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // プレイヤーかアバターに接触した場合に、ロック状態になって停止する
         if (collision.gameObject.tag == "Player")
         {
             speedSelect = 1;
@@ -55,11 +63,15 @@ public class EnemyLock : EnemyBase {
         }
     }
 
+    /// <summary>
+    /// ソードと接触判定
+    /// </summary>
+    /// <param name="collision">相手のコライダー</param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Sowrd")
         {
-            DamageEnemy();
+            Damage();
         }
     }
 

@@ -289,14 +289,25 @@
     <Compile Include="Assets\Scripts\Enemy\EnemyShild.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemySpring.cs" />
     <Compile Include="Assets\Scripts\Gimmick\FlipZone.cs" />
+    <Compile Include="Assets\Scripts\Gimmick\Lift.cs" />
     <Compile Include="Assets\Scripts\Gimmick\MultiSwichManager.cs" />
     <Compile Include="Assets\Scripts\Gimmick\MultiSwitch.cs" />
     <Compile Include="Assets\Scripts\Gimmick\Warp.cs" />
     <Compile Include="Assets\Scripts\Player\Attack.cs" />
+    <Compile Include="Assets\Scripts\Player\CameraController.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAvatar.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerAvatarManager.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerBase.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerStatus.cs" />
+    <Compile Include="Assets\Scripts\Scene\BGM.cs" />
+    <Compile Include="Assets\Scripts\Scene\ClearOver.cs" />
+    <Compile Include="Assets\Scripts\Scene\Credit.cs" />
+    <Compile Include="Assets\Scripts\Scene\Manual.cs" />
+    <Compile Include="Assets\Scripts\Scene\PlaySound.cs" />
+    <Compile Include="Assets\Scripts\Scene\SceneBase.cs" />
+    <Compile Include="Assets\Scripts\Scene\StageSelect.cs" />
+    <Compile Include="Assets\Scripts\Scene\Title.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

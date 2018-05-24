@@ -23,9 +23,9 @@ GameObject:
   - component: {fileID: 114639823773258812}
   - component: {fileID: 61681760594502750}
   - component: {fileID: 50805994137838292}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: EnemySpring
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79,14 +79,14 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.4, y: 3.39}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 3.4, y: 3.39}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.4, y: 3.39}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
 --- !u!114 &114639823773258812
 MonoBehaviour:
@@ -136,7 +136,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2c5a1d438f322b147a86aa7acb43d3e7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 53794ff0bb41b01428f35d4d29aa87d3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

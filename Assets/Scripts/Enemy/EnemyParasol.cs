@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// EnemyParasolの派生クラス
+/// </summary>
 public class EnemyParasol : EnemyBase {
 
     // パラソルの状態変化に使用
@@ -36,37 +39,44 @@ public class EnemyParasol : EnemyBase {
         }
     }
 
-
+    /// <summary>
+    /// 接触判定
+    /// </summary>
+    /// <param name="collision">相手のコライダー</param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (stateParasol)
         {
-            // パラソル状態である時に、地面に当たったらWalkerに変わる
             if (collision.gameObject.tag == "Ground")
             {
+                // パラソル状態である時に、地面に当たったらWalkerに変わる
                 this.gameObject.GetComponent<SpriteRenderer>().sprite = EnemyWakerSprite;
                 stateParasol = !stateParasol;
             }
         }
         if (collision.gameObject.tag == "Player")
         {
-            DamageEnemy();
+            Damage();
         }
         if (collision.gameObject.tag == "Avatar")
         {
-            DamageEnemy();
+            Damage();
         }
     }
 
+    /// <summary>
+    /// ソードとの接触判定
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Sowrd")
         {
-            DamageEnemy();
+            Damage();
         }
     }
 
-    // パラソルの挙動を制御するメソッド
+    // パラソルの挙動を制御
     private void ParasolMove()
     {
         if (swayCourse)

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// プレイヤーのスーパークラス
+/// <summary>
+/// プレイヤーの基底クラス
+/// </summary>
 public class PlayerBase : MonoBehaviour {
 
     // 操作ボタン
@@ -10,16 +12,20 @@ public class PlayerBase : MonoBehaviour {
     private KeyCode keyRight = KeyCode.RightArrow;
     protected KeyCode keyAction = KeyCode.Z;
     private KeyCode keyJump = KeyCode.Space;
-
-    // 移動速度
+    
     public float moveSpeed;
 
-    // ジャンプ力
     public float jumpForce;
     protected Rigidbody2D rig2D;
 
     // 攻撃判定オブジェクト
     public GameObject AttckJudge;
+
+    // 攻撃の後隙
+    private int interval;
+
+    // 攻撃の後隙
+    const int ATTACK_INTERVAL = 20;
 
     // 自分のHP (Player と Avatarで同じものを使用)
     protected int HP;
@@ -41,11 +47,20 @@ public class PlayerBase : MonoBehaviour {
     // FlipZoneで使用
     private bool flipMove;
 
-    // プレイヤーとアバターのAwakeで呼び出す
+    // プレイヤーの向いている方向を管理
+    private bool rightDirection;
+
+    // プレイヤーとアバターの初期スケールを格納するために必要
+    private　Vector3 scale;
+
+    /// <summary>
+    /// プレイヤーとアバターのAwakeで呼び出す
+    /// </summary>
     protected void SetUp()
     {
         groundDistance = GetComponent<SpriteRenderer>().bounds.size.y / 2.0f;
         playerWidth = GetComponent<SpriteRenderer>().bounds.size.x;
+        scale = transform.localScale;
     }
 
     /// <summary>
@@ -54,18 +69,20 @@ public class PlayerBase : MonoBehaviour {
     protected void Move()
     {
         Vector3 nextPosition = transform.position;
-        Vector3 scale = transform.localScale;
+        Vector3 nextScale = transform.localScale;
 
         if (Input.GetKey(keyLeft))
         {
             if (!flipMove)
             {
-                scale.x = -0.3f;
+                nextScale.x = -scale.x;
+                rightDirection = false;
                 nextPosition.x -= Time.deltaTime * moveSpeed;
             }
             else
             {
-                scale.x = 0.3f;
+                nextScale.x = scale.x;
+                rightDirection = true;
                 nextPosition.x += Time.deltaTime * moveSpeed;
 
             }
@@ -74,31 +91,38 @@ public class PlayerBase : MonoBehaviour {
         {
             if (!flipMove)
             {
-                scale.x = 0.3f;
+                nextScale.x = scale.x;
+                rightDirection = true;
                 nextPosition.x += Time.deltaTime * moveSpeed;
 
             }
             else
             {
-                scale.x = -0.3f;
+                nextScale.x = -scale.x;
+                rightDirection = false;
                 nextPosition.x -= Time.deltaTime * moveSpeed;
             }
         }
         transform.position = nextPosition;
-        transform.localScale = scale;
+        transform.localScale = nextScale;
     }
 
+    /// <summary>
+    /// ジャンプ
+    /// </summary>
     protected void Jump()
     {
-        // ジャンプ
         if (Input.GetKeyDown(keyJump))
         {
             rig2D.AddForce(Vector2.up * jumpForce);
         }
     }
 
-    // 地面と接地しているかチェックするメソッド
-    protected bool checkGround()
+    /// <summary>
+    /// 地面と接触しているか確認
+    /// </summary>
+    /// <returns>ジャンプできるかどうか</returns>
+    protected bool CheckGround()
     {
         Vector3 offset = Vector3.zero;
         offset.x = playerWidth / 2.0f; // 画像の両端にも判定を持たせるために使用
@@ -110,14 +134,21 @@ public class PlayerBase : MonoBehaviour {
             return true;
         else if (Physics2D.Raycast(transform.position - offset, Vector2.down, groundDistance + footDistance, groundMask))
             return true;
-
-        //Debug.DrawRay(transform.position, Vector3.down * groundDistance);
-
+        
         return false;
     }
 
+    /// <summary>
+    /// 攻撃
+    /// </summary>
     protected void Attack()
     {
+        interval++;
+        if (interval < ATTACK_INTERVAL)
+        {
+            // 攻撃に間隔を設けるため
+            return;
+        }
         Vector3 pos = transform.position;
         // 攻撃判定を出す
         Vector3 offset = Vector3.zero;
@@ -130,10 +161,21 @@ public class PlayerBase : MonoBehaviour {
         }
         else if (Input.GetKeyDown(keyAction))
         {
-            Instantiate(AttckJudge, new Vector3(pos.x + attackRange, pos.y), Quaternion.identity);
+            if (rightDirection)
+            {
+                Instantiate(AttckJudge, new Vector3(pos.x + attackRange, pos.y), Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(AttckJudge, new Vector3(pos.x - attackRange, pos.y), Quaternion.identity);
+            }
+            interval = 0;
         }
     }
 
+    /// <summary>
+    /// FlipZoneに接触したときの操作反転
+    /// </summary>
     public void FlipMove()
     {
         flipMove = !flipMove;

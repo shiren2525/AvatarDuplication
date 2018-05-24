@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// ワープのクラス
+/// <summary>
+/// ワープのクラス
+/// </summary>
 public class Warp : MonoBehaviour {
     
     // ワープ先の座標を取る
     [SerializeField] GameObject WarpZone;
     
+    /// <summary>
+    /// プレイヤーかアバターが接触した場合にワープさせる
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Vector3 pos = WarpZone.transform.position;
         Vector3 offset = new Vector3(0, 5.2f, 0);
-        // ToDoワープ先の座標の調整
+        // TODO:ワープ先の座標の調整
         if (collision.gameObject.tag == ("Player"))
         {
             collision.gameObject.transform.position = pos - offset;
