@@ -6,7 +6,8 @@ using UnityEngine.UI;
 /// <summary>
 /// アバターの派生クラス
 /// </summary>
-public class PlayerAvatar : PlayerBase {
+public class PlayerAvatar : PlayerBase
+{
 
     // アバターの状態を管理
     private bool stateAvatar = false;
@@ -40,6 +41,8 @@ public class PlayerAvatar : PlayerBase {
 
     // オフ状態の時に近づかれたときに出すため
     [SerializeField] GameObject iconAction;
+
+    [SerializeField] PlaySound playSE;
 
     private void Awake()
     {
@@ -75,7 +78,7 @@ public class PlayerAvatar : PlayerBase {
         Move();
         Attack();
         if (CheckGround())
-            Jump();        
+            Jump();
     }
 
     /// <summary>
@@ -85,7 +88,7 @@ public class PlayerAvatar : PlayerBase {
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!stateAvatar)
-        {  
+        {
             // 起動していなければリターン
             return;
         }
@@ -127,13 +130,14 @@ public class PlayerAvatar : PlayerBase {
         if (Physics2D.Raycast(transform.position - offset, Vector2.left, findRange, layerMask))
         {
             iconAction.SetActive(true);
-            if (Input.GetKeyDown(keyAction))
+            if (Input.GetKeyDown(keyAction) || Input.GetButtonDown(B))
             {
                 // オフ状態からアバター扱いにする
                 this.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
                 PlayerStatus.GetComponent<PlayerStatus>().AddNumberAvatar();
                 this.gameObject.layer = LayerMask.NameToLayer("Avatar");
                 Destroy(iconAction);
+                playSE.PlaySE(7);
                 stateAvatar = true;
             }
         }
@@ -178,10 +182,10 @@ public class PlayerAvatar : PlayerBase {
         {
             deathCount--;
             count = 0;
-        }       
+        }
         if (deathCount == 0)
         {
-            Death();   
+            Death();
         }
     }
 
@@ -193,6 +197,7 @@ public class PlayerAvatar : PlayerBase {
         HP--;
         DeathCountText.GetComponent<Text>().text = "";
         PlayerStatus.GetComponent<PlayerStatus>().AddDamageAvatar(1);
+        playSE.PlaySE(6);
         if (IsDeath())
         {
             Destroy(this.gameObject);

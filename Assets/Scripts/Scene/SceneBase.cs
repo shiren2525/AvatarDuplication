@@ -8,6 +8,13 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class SceneBase : MonoBehaviour {
 
+    protected string Horizontal = "Horizontal";
+    protected string Vertical = "Vertical";
+    protected string A = "A";
+    protected string B = "B";
+
+    protected bool hori;
+
     // すべてのシーンで受け付けるシーン遷移
     protected void Menu()
     {
@@ -15,7 +22,7 @@ public class SceneBase : MonoBehaviour {
         {
             Application.Quit();
         }
-        else if (Input.GetKeyDown(KeyCode.R))
+        else if (Input.GetKeyDown(KeyCode.R)||Input.GetButtonDown("Start"))
         {
             SceneManager.LoadScene("Title");
         }

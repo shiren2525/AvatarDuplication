@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// タイトル画面で使用する派生クラス
 /// </summary>
-public class Title : SceneBase {
+public class Title : SceneBase
+{
 
     private KeyCode keyLeft = KeyCode.LeftArrow;
     private KeyCode keyRight = KeyCode.RightArrow;
@@ -47,28 +48,34 @@ public class Title : SceneBase {
             case 4:
                 Application.Quit();
                 break;
-        } 
+        }
     }
 
     // キー入力によって番号を変更する
     private void Selected()
     {
-        if (Input.GetKeyDown(keyRight))
+        if (!IsInvoking("LoadScene") && (Input.GetKeyDown(keyRight) || Input.GetAxisRaw(Horizontal) == 1 && hori))
         {
             selectNum++;
             Cursor();
             playSE.PlaySE(0);
+            hori = false;
         }
-        else if (Input.GetKeyDown(keyLeft))
+        else if (!IsInvoking("LoadScene") && (Input.GetKeyDown(keyLeft) || Input.GetAxisRaw(Horizontal) == -1 && hori))
         {
             selectNum--;
             Cursor();
             playSE.PlaySE(0);
+            hori = false;
         }
-        else if (Input.GetKeyDown(keyAction))
+        else if (Input.GetKeyDown(keyAction) || Input.GetButtonDown(B))
         {
             playSE.PlaySE(1);
-            Invoke("LoadScene", 1.0f);
+            Invoke("LoadScene", 0.8f);
+        }
+        else if (!IsInvoking("LoadScene") && Input.GetAxisRaw(Horizontal) == 0)
+        {
+            hori = true;
         }
     }
 
@@ -106,5 +113,5 @@ public class Title : SceneBase {
         }
         Debug.Log("Title 選ばれている番号: " + selectNum);
         CursorObj.transform.position = cursorPosition;
-    } 
+    }
 }

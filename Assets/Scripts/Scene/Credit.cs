@@ -6,14 +6,21 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// クレジットのシーンで使う派生クラス
 /// </summary>
-public class Credit : SceneBase {
+public class Credit : SceneBase
+{
+    [SerializeField] PlaySound playSE;
 
     private void Update()
     {
         Menu();
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown(A) || Input.GetButtonDown(B))
         {
-            SceneManager.LoadScene("Title");
+            playSE.PlaySE(0);
+            Invoke("LoadScene", 0.5f);
         }
+    }
+    private void LoadScene()
+    {
+        SceneManager.LoadScene("Title");
     }
 }

@@ -288,6 +288,7 @@
     <Compile Include="Assets\Scripts\Enemy\EnemyParasol.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyShild.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemySpring.cs" />
+    <Compile Include="Assets\Scripts\Enemy\SpawnEnemy.cs" />
     <Compile Include="Assets\Scripts\Gimmick\FlipZone.cs" />
     <Compile Include="Assets\Scripts\Gimmick\Lift.cs" />
     <Compile Include="Assets\Scripts\Gimmick\MultiSwichManager.cs" />

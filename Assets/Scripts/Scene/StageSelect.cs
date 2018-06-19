@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// ステージセレクトのシーンで使う派生クラス
 /// </summary>
-public class StageSelect : SceneBase {
+public class StageSelect : SceneBase
+{
 
     private KeyCode keyLeft = KeyCode.LeftArrow;
     private KeyCode keyRight = KeyCode.RightArrow;
@@ -29,7 +30,7 @@ public class StageSelect : SceneBase {
         Menu();
         Selected();
     }
-    
+
     /// <summary>
     /// 番号によってシーン遷移する
     /// </summary>
@@ -38,13 +39,13 @@ public class StageSelect : SceneBase {
         switch (selectNum)
         {
             case 1:
-                SceneManager.LoadScene("Main");
+                SceneManager.LoadScene("Stage1");
                 break;
             case 2:
-                SceneManager.LoadScene("Main");
+                SceneManager.LoadScene("Stage2");
                 break;
             case 3:
-                SceneManager.LoadScene("Main");
+                SceneManager.LoadScene("Stage3");
                 break;
             case 4:
                 SceneManager.LoadScene("Title");
@@ -57,22 +58,28 @@ public class StageSelect : SceneBase {
     /// </summary>    
     private void Selected()
     {
-        if (Input.GetKeyDown(keyRight))
+        if (!IsInvoking("LoadScene")&&(Input.GetKeyDown(keyRight) ||Input.GetAxisRaw(Horizontal)==1&&hori))
         {
             selectNum++;
             Cursor();
             playSE.PlaySE(0);
+            hori = false;
         }
-        else if (Input.GetKeyDown(keyLeft))
+        else if (!IsInvoking("LoadScene")&&(Input.GetKeyDown(keyLeft) ||Input.GetAxisRaw(Horizontal)==-1&&hori))
         {
             selectNum--;
             Cursor();
             playSE.PlaySE(0);
+            hori = false;
         }
-        else if (Input.GetKeyDown(keyAction))
+        else if (Input.GetKeyDown(keyAction)||Input.GetButtonDown(B))
         {
             playSE.PlaySE(1);
             Invoke("LoadScene", 0.8f);
+        }
+        else if (!IsInvoking("LoadScene")&&Input.GetAxisRaw(Horizontal)==0)
+        {
+            hori = true;
         }
     }
 

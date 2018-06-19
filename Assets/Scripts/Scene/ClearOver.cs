@@ -12,6 +12,8 @@ public class ClearOver : SceneBase {
     // クリア時とオーバー時に使用
     [SerializeField] Text ClearOverText;
 
+    [SerializeField] PlaySound playSE;
+
     void Update () {
         Menu();	
 	}
@@ -25,6 +27,7 @@ public class ClearOver : SceneBase {
         if (collision.gameObject.tag == "Player")
         {
             ClearOverText.GetComponent<Text>().text = "Clear";
+            playSE.PlaySE(5);
             Invoke("CallTitleScene", 5.0f);
         }
     }

@@ -17,6 +17,8 @@ public class Player : PlayerBase {
     [SerializeField] GameObject iconPlayer;
     private float destroyTime = 10.0f;
 
+    [SerializeField] PlaySound playSE;
+
     private void Awake()
     {
         SetUp();
@@ -50,9 +52,11 @@ public class Player : PlayerBase {
         {
             HP--;
             PlayerStatus.GetComponent<PlayerStatus>().AddDamagePlayer(1);
+            playSE.PlaySE(6);
             if (IsDeath())
             {
-                Destroy(this.gameObject);
+                Debug.Log("やられちゃった");
+                //Destroy(this.gameObject);
             }
         }
 
@@ -83,5 +87,20 @@ public class Player : PlayerBase {
     private bool IsDeath()
     {
         return HP <= 0;
+    }
+
+    protected override void Jump()
+    {
+        if (Input.GetKeyDown(keyJump) || Input.GetButtonDown(A))
+        {
+            rig2D.AddForce(Vector2.up * jumpForce);
+            playSE.PlaySE(3);
+        }
+    }
+
+    protected override void AttackMain(Vector3 pos)
+    {
+        base.AttackMain(pos);
+        playSE.PlaySE(2);
     }
 }

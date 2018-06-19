@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class FlipZone : MonoBehaviour {
 
+    [SerializeField] PlaySound playSE;
+
     /// <summary>
     /// プレイヤーかアバターの操作を反転させる
     /// </summary>
@@ -16,10 +18,12 @@ public class FlipZone : MonoBehaviour {
         if (collision.gameObject.tag == ("Player"))
         {
             collision.gameObject.GetComponent<PlayerBase>().FlipMove();
+            playSE.PlaySE(0);
         }
         if (collision.gameObject.tag == "Avatar")
         {
             collision.gameObject.GetComponent<PlayerBase>().FlipMove();
+            playSE.PlaySE(0);
         }
     }
 }

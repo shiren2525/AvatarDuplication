@@ -5,27 +5,28 @@ using UnityEngine;
 /// <summary>
 /// プレイヤーの基底クラス
 /// </summary>
-public class PlayerBase : MonoBehaviour {
+public class PlayerBase : MonoBehaviour
+{
 
     // 操作ボタン
     private KeyCode keyLeft = KeyCode.LeftArrow;
     private KeyCode keyRight = KeyCode.RightArrow;
     protected KeyCode keyAction = KeyCode.Z;
-    private KeyCode keyJump = KeyCode.Space;
-    
+    protected KeyCode keyJump = KeyCode.Space;
+
+    private string Horizontal = "Horizontal";
+    protected string A = "A";
+    protected string B = "B";
+
     public float moveSpeed;
 
     public float jumpForce;
     protected Rigidbody2D rig2D;
+    protected SpriteRenderer spriteRenderer;
 
-    // 攻撃判定オブジェクト
-    public GameObject AttckJudge;
-
-    // 攻撃の後隙
-    private int interval;
-
-    // 攻撃の後隙
-    const int ATTACK_INTERVAL = 20;
+    public GameObject AttckJudge;   // 攻撃判定オブジェクト
+    private int interval;           // 攻撃の後隙を管理するための変数
+    const int ATTACK_INTERVAL = 20; // 攻撃の後隙の値
 
     // 自分のHP (Player と Avatarで同じものを使用)
     protected int HP;
@@ -36,7 +37,7 @@ public class PlayerBase : MonoBehaviour {
     [SerializeField] protected LayerMask groundMask;
 
     // 前にオフ状態のアバターがあるかどうかを判別するために使用
-    public LayerMask layerMaskSowrd;
+    public LayerMask layerMaskSword;
 
     // アバターを発見できるようになる距離(この距離にある時にアタックもできなくなる)
     protected float findRange = 0.1f;
@@ -47,20 +48,15 @@ public class PlayerBase : MonoBehaviour {
     // FlipZoneで使用
     private bool flipMove;
 
-    // プレイヤーの向いている方向を管理
-    private bool rightDirection;
-
-    // プレイヤーとアバターの初期スケールを格納するために必要
-    private　Vector3 scale;
 
     /// <summary>
     /// プレイヤーとアバターのAwakeで呼び出す
     /// </summary>
     protected void SetUp()
     {
-        groundDistance = GetComponent<SpriteRenderer>().bounds.size.y / 2.0f;
-        playerWidth = GetComponent<SpriteRenderer>().bounds.size.x;
-        scale = transform.localScale;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        groundDistance = spriteRenderer.bounds.size.y / 2.0f;
+        playerWidth = spriteRenderer.bounds.size.x;
     }
 
     /// <summary>
@@ -69,50 +65,42 @@ public class PlayerBase : MonoBehaviour {
     protected void Move()
     {
         Vector3 nextPosition = transform.position;
-        Vector3 nextScale = transform.localScale;
 
-        if (Input.GetKey(keyLeft))
+        if (Input.GetKey(keyLeft) || Input.GetAxis(Horizontal) < 0)
         {
             if (!flipMove)
             {
-                nextScale.x = -scale.x;
-                rightDirection = false;
+                spriteRenderer.flipX = true;
                 nextPosition.x -= Time.deltaTime * moveSpeed;
             }
             else
             {
-                nextScale.x = scale.x;
-                rightDirection = true;
+                spriteRenderer.flipX = false;
                 nextPosition.x += Time.deltaTime * moveSpeed;
-
             }
         }
-        else if (Input.GetKey(keyRight))
+        else if (Input.GetKey(keyRight) || Input.GetAxis(Horizontal) > 0)
         {
             if (!flipMove)
             {
-                nextScale.x = scale.x;
-                rightDirection = true;
+                spriteRenderer.flipX = false;
                 nextPosition.x += Time.deltaTime * moveSpeed;
-
             }
             else
             {
-                nextScale.x = -scale.x;
-                rightDirection = false;
+                spriteRenderer.flipX = true;
                 nextPosition.x -= Time.deltaTime * moveSpeed;
             }
         }
         transform.position = nextPosition;
-        transform.localScale = nextScale;
     }
 
     /// <summary>
     /// ジャンプ
     /// </summary>
-    protected void Jump()
+    protected virtual void Jump()
     {
-        if (Input.GetKeyDown(keyJump))
+        if (Input.GetKeyDown(keyJump) || Input.GetButtonDown(A))
         {
             rig2D.AddForce(Vector2.up * jumpForce);
         }
@@ -134,7 +122,7 @@ public class PlayerBase : MonoBehaviour {
             return true;
         else if (Physics2D.Raycast(transform.position - offset, Vector2.down, groundDistance + footDistance, groundMask))
             return true;
-        
+
         return false;
     }
 
@@ -153,24 +141,34 @@ public class PlayerBase : MonoBehaviour {
         // 攻撃判定を出す
         Vector3 offset = Vector3.zero;
         offset.x = playerWidth / 2;
-
-        if (Physics2D.Raycast(transform.position + offset, Vector2.left, -findRange, layerMaskSowrd))
+        Debug.DrawRay(transform.position + offset, Vector2.right *findRange);
+        if (Physics2D.Raycast(transform.position + offset, Vector2.right , findRange, layerMaskSword))
         {
             // 前にオフ状態のアバターがあった場合は、アタックしない。
+            Debug.Log("前にアバターオフがあります。");
             return;
         }
-        else if (Input.GetKeyDown(keyAction))
-        {
-            if (rightDirection)
-            {
-                Instantiate(AttckJudge, new Vector3(pos.x + attackRange, pos.y), Quaternion.identity);
-            }
-            else
-            {
-                Instantiate(AttckJudge, new Vector3(pos.x - attackRange, pos.y), Quaternion.identity);
-            }
-            interval = 0;
+        else if (Input.GetKeyDown(keyAction) || Input.GetButtonDown(B))
+        {       
+            AttackMain(pos);
         }
+    }
+
+    /// <summary>
+    /// プレイヤーだけにSEを鳴らせたいのでオーバーライドする
+    /// </summary>
+    /// <param name="pos">自分の座標</param>
+    protected virtual void AttackMain(Vector3 pos)
+    {
+        if (!spriteRenderer.flipX)
+        {
+            Instantiate(AttckJudge, new Vector3(pos.x + attackRange, pos.y), Quaternion.identity);
+        }
+        else
+        {
+            Instantiate(AttckJudge, new Vector3(pos.x - attackRange, pos.y), Quaternion.identity);
+        }
+        interval = 0;
     }
 
     /// <summary>
