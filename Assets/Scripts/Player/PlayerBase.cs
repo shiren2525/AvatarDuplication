@@ -40,7 +40,7 @@ public class PlayerBase : MonoBehaviour
     public LayerMask layerMaskSword;
 
     // アバターを発見できるようになる距離(この距離にある時にアタックもできなくなる)
-    protected float findRange = 0.1f;
+    protected float findRange = 2.0f;
 
     // 攻撃を出す距離
     public float attackRange;

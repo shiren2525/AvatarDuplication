@@ -124,10 +124,10 @@ public class PlayerAvatar : PlayerBase
     private void FindAvatar()
     {
         Vector3 offset = Vector3.zero;
-        offset.x = avatarWidth / 2;
-        Debug.DrawRay(transform.position - offset, Vector2.left * findRange);
+        offset.x = avatarWidth / 1.0f;
+        Debug.DrawRay(transform.position - offset, Vector2.right * findRange);
         // 前にプレイヤー又はアバターがあった場合、起動させられる。
-        if (Physics2D.Raycast(transform.position - offset, Vector2.left, findRange, layerMask))
+        if (Physics2D.Raycast(transform.position - offset, Vector2.right, findRange, layerMask))
         {
             iconAction.SetActive(true);
             if (Input.GetKeyDown(keyAction) || Input.GetButtonDown(B))
